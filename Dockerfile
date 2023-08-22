@@ -1,11 +1,11 @@
-# Stage 1: Build the application using Gradle
-FROM gradle:7.2.0-jdk11 as builder
-WORKDIR /app
-COPY . .
-RUN ./gradlew build
-
-# Stage 2: Create a lightweight container to run the application
+# Używamy gotowego obrazu Javy 11
 FROM openjdk:11-jre-slim
+
+# Tworzymy katalog w kontenerze
 WORKDIR /app
-COPY --from=builder /app/build/libs/veterinaryapp-0.0.1-SNAPSHOT.jar veterinaryapp-0.0.1-SNAPSHOT.jar
+
+# Kopiujemy plik JAR aplikacji do kontenera
+COPY build/libs/veterinaryapp-0.0.1-SNAPSHOT.jar /app/veterinaryapp-0.0.1-SNAPSHOT.jar
+
+# Definiujemy punkt wejścia dla kontenera
 ENTRYPOINT ["java", "-jar", "/app/veterinaryapp-0.0.1-SNAPSHOT.jar"]
