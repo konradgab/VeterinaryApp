@@ -33,7 +33,6 @@ public class AnimalServiceImpl implements AnimalService {
         if (animal.isPresent()) {
             throw new IncorrectDataException("Species exists.");
         }
-
         return animalRepository.save(mapper.map(animalRequestDto));
     }
 

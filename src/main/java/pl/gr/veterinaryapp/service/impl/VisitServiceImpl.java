@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 public class VisitServiceImpl implements VisitService {
 
     private static final int MINIMAL_TIME_TO_VISIT = 60;
-
     private final VisitRepository visitRepository;
     private final VetRepository vetRepository;
     private final PetRepository petRepository;
@@ -49,11 +48,9 @@ public class VisitServiceImpl implements VisitService {
     public Visit getVisitById(User user, long id) {
         Visit visit = visitRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Wrong id."));
-
         if (!isUserAuthorized(user, visit.getPet().getClient())) {
             throw new ResourceNotFoundException("Wrong id.");
         }
-
         return visit;
     }
 
@@ -71,26 +68,19 @@ public class VisitServiceImpl implements VisitService {
         var vetId = visitRequestDto.getVetId();
         var startDateTime = visitRequestDto.getStartDateTime();
         var duration = visitRequestDto.getDuration();
-
         Vet vet = vetRepository.findById(vetId)
                 .orElseThrow(() -> new IncorrectDataException("Wrong vet id."));
-
         validateVisitDate(vetId, startDateTime, duration);
-
         Pet pet = petRepository.findById(visitRequestDto.getPetId())
                 .orElseThrow(() -> new IncorrectDataException("Wrong pet id."));
-
         if (!isUserAuthorized(user, pet.getClient())) {
             throw new ResourceNotFoundException("Wrong id.");
         }
-
         var treatmentRoom = getFreeTreatmentRoom(startDateTime, duration)
                 .orElseThrow(() -> new IncorrectDataException("There is no free treatment room."));
-
         if (!isTimeBetweenIncludingEndPoints(vet.getWorkStartTime(), vet.getWorkEndTime(), visitRequestDto.getStartDateTime())) {
             throw new IncorrectDataException("This vet doesn't work at this hour.");
         }
-
         var newVisit = new Visit();
         newVisit.setPet(pet);
         newVisit.setVet(vet);
@@ -101,21 +91,17 @@ public class VisitServiceImpl implements VisitService {
         newVisit.setVisitStatus(VisitStatus.SCHEDULED);
         newVisit.setOperationType(visitRequestDto.getOperationType());
         newVisit.setTreatmentRoom(treatmentRoom);
-
         return visitRepository.save(newVisit);
     }
 
     private void validateVisitDate(long vetId, OffsetDateTime startDateTime, Duration duration) {
         var nowZoned = OffsetDateTime.now(systemClock);
-
         if (startDateTime.isBefore(nowZoned)) {
             throw new IncorrectDataException("Visit startDateTime need to be in future.");
         }
-
         if (Duration.between(nowZoned, startDateTime).toMinutes() < MINIMAL_TIME_TO_VISIT) {
             throw new IncorrectDataException("The time to your visit is too short.");
         }
-
         if (visitRepository.findAllOverlapping(vetId, startDateTime, startDateTime.plus(duration)).size() != 0) {
             throw new IncorrectDataException("This date is not available.");
         }
@@ -129,7 +115,6 @@ public class VisitServiceImpl implements VisitService {
                         .collect(Collectors.toSet());
         var rooms = treatmentRoomRepository.findAll();
         rooms.removeAll(occupiedRooms);
-
         if (rooms.isEmpty()) {
             return Optional.empty();
         } else {
@@ -171,27 +156,21 @@ public class VisitServiceImpl implements VisitService {
                 .map(Vet::getId)
                 .collect(Collectors.toSet());
         var visits = visitRepository.findAllInDateTimeRangeAndVetIdIn(startDateTime, endDateTime, vetIdsSet);
-
         List<AvailableVisitDto> result = new ArrayList<>();
-
         var visitSlotStart = startDateTime;
         while (visitSlotStart.compareTo(endDateTime) < 0) {
             var visitSlotEnd = visitSlotStart.plusMinutes(15);
-
             var busyVetIds = getBusyVetIds(visits, visitSlotStart, visitSlotEnd);
             var availableVetIds = getAvailableVetIds(vets, visitSlotStart, visitSlotEnd);
             availableVetIds.removeAll(busyVetIds);
-
             if (!availableVetIds.isEmpty()) {
                 var availableVisit = new AvailableVisitDto();
                 availableVisit.setVetIds(availableVetIds);
                 availableVisit.setStartDateTime(visitSlotStart);
                 result.add(availableVisit);
             }
-
             visitSlotStart = visitSlotEnd;
         }
-
         return result;
     }
 
