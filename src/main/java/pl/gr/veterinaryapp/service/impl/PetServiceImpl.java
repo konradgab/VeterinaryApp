@@ -67,7 +67,7 @@ public class PetServiceImpl implements PetService {
             throw new ResourceNotFoundException("User don't have access to this pet");
         }
 
-        var newPet = new Pet();
+        Pet newPet = new Pet();
         newPet.setName(petRequestDto.getName());
         newPet.setBirthDate(petRequestDto.getBirthDate());
         newPet.setAnimal(animal);
