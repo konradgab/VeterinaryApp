@@ -1,6 +1,7 @@
 package pl.gr.veterinaryapp.controller.rest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +14,7 @@ import pl.gr.veterinaryapp.service.impl.TokenServiceImpl;
 import javax.servlet.http.HttpServletRequest;
 
 import static pl.gr.veterinaryapp.common.TokenConstants.AUTH_HEADER_NAME;
-
+@Slf4j
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -23,11 +24,13 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public AuthToken register(@RequestBody LoginUser loginUser) throws AuthenticationException {
+        log.info("Login user:"+ loginUser);
         return tokenService.register(loginUser);
     }
 
     @PostMapping("/log-out")
     public void logout(HttpServletRequest req) {
+        log.info("Logout user:"+ req);
         String tokenHeader = req.getHeader(AUTH_HEADER_NAME);
         tokenService.logout(tokenHeader);
     }

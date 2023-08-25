@@ -1,6 +1,7 @@
 package pl.gr.veterinaryapp.controller.rest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,7 +22,7 @@ import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("api/pets")
 @RestController
@@ -32,11 +33,13 @@ public class PetRestController {
 
     @DeleteMapping(path = "/{id}")
     public void delete(@PathVariable int id) {
+        log.info("Delete pet with id:" + id);
         petService.deletePet(id);
     }
 
     @GetMapping(path = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public PetResponseDto getPet(@AuthenticationPrincipal User user, @PathVariable long id) {
+        log.info("Get pet with id:" + id);
         var pet = mapper.map(petService.getPetById(user, id));
         addLinks(pet);
         return pet;
@@ -44,6 +47,7 @@ public class PetRestController {
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public List<PetResponseDto> getAllPets(@AuthenticationPrincipal User user) {
+        log.info("Getting all pets");
         var pets = mapper.mapAsList(petService.getAllPets(user));
 
         for (var pet : pets) {
@@ -58,6 +62,7 @@ public class PetRestController {
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public PetResponseDto createPet(@AuthenticationPrincipal User user, @RequestBody PetRequestDto petRequestDto) {
+        log.info("Creating pet: "+ petRequestDto);
         System.out.println(user);
 
         var pet = mapper.map(petService.createPet(user, petRequestDto));
@@ -66,16 +71,19 @@ public class PetRestController {
     }
 
     public Link createClientLink(long id) {
+        log.info("Creating client link with id:"+ id);
         return linkTo(methodOn(ClientRestController.class).getClient(id))
                 .withRel("client");
     }
 
     public Link createAnimalLink(long id) {
+        log.info("Creating animal link with id:" + id);
         return linkTo(methodOn(AnimalRestController.class).getAnimal(id))
                 .withRel("animal");
     }
 
     public void addLinks(PetResponseDto petResponseDto) {
+        log.info("Add client link to animal link:"+ petResponseDto);
         petResponseDto.add(createAnimalLink(petResponseDto.getAnimalId()),
                 createClientLink(petResponseDto.getClientId()));
     }

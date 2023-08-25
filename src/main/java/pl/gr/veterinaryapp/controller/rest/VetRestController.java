@@ -1,6 +1,7 @@
 package pl.gr.veterinaryapp.controller.rest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +14,7 @@ import pl.gr.veterinaryapp.model.entity.Vet;
 import pl.gr.veterinaryapp.service.VetService;
 
 import java.util.List;
-
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/vets")
@@ -23,11 +24,13 @@ public class VetRestController {
 
     @GetMapping("/{id}")
     public Vet getVet(@PathVariable long id) {
+        log.info("Get vet by id"+ id);
         return vetService.getVetById(id);
     }
 
     @PostMapping
     public Vet addVet(@RequestBody VetRequestDto vetRequestDTO) {
+        log.info("Add vet"+ vetRequestDTO);
         return vetService.createVet(vetRequestDTO);
     }
 
