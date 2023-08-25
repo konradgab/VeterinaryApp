@@ -57,39 +57,28 @@ public class VisitRestController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX") OffsetDateTime startDateTime,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX") OffsetDateTime endDateTime,
             @RequestParam(required = false) List<Long> vetIds) {
-        Set<Long> vetIdsSet;
-        if (vetIds == null) {
-            vetIdsSet = Collections.emptySet();
-        } else {
-            vetIdsSet = vetIds
-                    .stream()
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toSet());
-        }
+        Set<Long> vetIdsSet = vetIds == null ? Collections.emptySet() : vetIds.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
-        var availableVisits = visitService
-                .getAvailableVisits(startDateTime, endDateTime, vetIdsSet);
+        List<AvailableVisitDto> availableVisits = visitService.getAvailableVisits(startDateTime, endDateTime, vetIdsSet);
 
-        for (var availableVisit : availableVisits) {
-            for (var vetId : availableVisit.getVetIds()) {
-                availableVisit.add(createVetLink(vetId));
-            }
-        }
+        availableVisits.forEach(availableVisit -> availableVisit.getVetIds().forEach(vetId -> {
+            availableVisit.add(createVetLink(vetId));
+        }));
+
         return availableVisits;
     }
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public List<VisitResponseDto> getAllVisits(@AuthenticationPrincipal User user) {
-        var visits = mapper.mapAsList(visitService.getAllVisits(user));
-
-        for (var visit : visits) {
-            addLinks(visit);
-            var link = linkTo(methodOn(VisitRestController.class).getVisit(user, visit.getId()))
-                    .withSelfRel();
-            visit.add(link);
-        }
-
-        return visits;
+        return mapper.mapAsList(visitService.getAllVisits(user)).stream()
+                .map(visitResponse -> {
+                    addLinks(visitResponse);
+                    visitResponse.add(Link.of("/api/visits/" + visitResponse.getId()));
+                    return visitResponse;
+                })
+                .collect(Collectors.toList());
     }
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)

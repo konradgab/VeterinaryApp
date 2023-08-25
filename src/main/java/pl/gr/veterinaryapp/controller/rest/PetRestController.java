@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.gr.veterinaryapp.mapper.PetMapper;
 import pl.gr.veterinaryapp.model.dto.PetRequestDto;
 import pl.gr.veterinaryapp.model.dto.PetResponseDto;
+import pl.gr.veterinaryapp.model.entity.Pet;
 import pl.gr.veterinaryapp.service.PetService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -44,16 +46,13 @@ public class PetRestController {
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public List<PetResponseDto> getAllPets(@AuthenticationPrincipal User user) {
-        var pets = mapper.mapAsList(petService.getAllPets(user));
-
-        for (var pet : pets) {
-            addLinks(pet);
-            var link = linkTo(methodOn(PetRestController.class).getPet(user, pet.getId()))
-                    .withSelfRel();
-            pet.add(link);
-        }
-
-        return pets;
+        return mapper.mapAsList(petService.getAllPets(user)).stream()
+                .map(petResponse -> {
+                    addLinks(petResponse);
+                    petResponse.add(Link.of("/api/pets/" + petResponse.getId()));
+                    return petResponse;
+                })
+                .collect(Collectors.toList());
     }
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)

@@ -21,7 +21,6 @@ public class BCryptPepperPasswordEncoder extends BCryptPasswordEncoder {
         if (rawPassword == null) {
             throw new IllegalArgumentException("rawPassword cannot be null");
         }
-
         return super.encode(combinePasswordWithPepper(rawPassword.toString()));
     }
 

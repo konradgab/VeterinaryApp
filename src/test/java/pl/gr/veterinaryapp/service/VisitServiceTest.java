@@ -563,5 +563,4 @@ class VisitServiceTest {
                 eq(request.getStartDateTime().plus(request.getDuration())));
         verify(treatmentRoomRepository).findAll();
     }
-
 }
