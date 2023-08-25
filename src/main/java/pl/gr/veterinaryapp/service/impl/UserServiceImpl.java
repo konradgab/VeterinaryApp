@@ -36,10 +36,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public VetAppUser createUser(UserDto user) {
-        userRepository.findByUsername(user.getUsername())
-                .ifPresent(u -> {
-                    throw new IncorrectDataException("Username exists.");
-                });
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new IncorrectDataException("Username exists.");
+        }
+
         VetAppUser newVetAppUser = new VetAppUser();
         newVetAppUser.setUsername(user.getUsername());
         newVetAppUser.setPassword(encoder.encode(user.getPassword()));
