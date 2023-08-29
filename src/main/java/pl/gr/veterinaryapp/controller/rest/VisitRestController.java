@@ -60,16 +60,16 @@ public class VisitRestController {
         Set<Long> vetIdsSet = (vetIds == null)
                 ? Collections.emptySet()
                 : vetIds.stream()
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toSet());
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
         List<AvailableVisitDto> availableVisits = visitService
                 .getAvailableVisits(startDateTime, endDateTime, vetIdsSet);
 
         availableVisits.forEach(availableVisit ->
                 availableVisit.getVetIds().forEach(vetId ->
-                                                    availableVisit.add(createVetLink(vetId))
-                                                     )
+                        availableVisit.add(createVetLink(vetId))
+                )
         );
 
         return availableVisits;

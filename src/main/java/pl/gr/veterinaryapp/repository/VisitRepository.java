@@ -2,6 +2,7 @@ package pl.gr.veterinaryapp.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.gr.veterinaryapp.common.VisitStatus;
 import pl.gr.veterinaryapp.model.entity.Visit;
@@ -9,6 +10,7 @@ import pl.gr.veterinaryapp.model.entity.Visit;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface VisitRepository extends JpaRepository<Visit, Long> {
@@ -40,4 +42,7 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
     List<Visit> findAllOverlappingInDateRange(
             OffsetDateTime startDateTime,
             OffsetDateTime endDateTime);
+
+    @Query("SELECT v FROM Visit v WHERE YEAR(v.startDateTime) = :year AND MONTH(v.startDateTime) = :month AND v.visitStatus = :status")
+    Set<Visit> findVisitsByYearAndMonth(@Param("year") int year, @Param("month") int month, @Param("status") VisitStatus status);
 }
