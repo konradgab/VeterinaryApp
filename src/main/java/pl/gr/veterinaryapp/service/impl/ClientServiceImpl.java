@@ -1,5 +1,6 @@
 package pl.gr.veterinaryapp.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
     private final ClientMapper mapper;
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
 
     @Override
     public Client getClientById(long id) {
