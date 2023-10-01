@@ -38,6 +38,7 @@ import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
+import java.time.temporal.TemporalAccessor;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -170,7 +171,7 @@ class VisitServiceTest {
     void createVisit_WithCorrectData_Created(Duration timeOffsetFromNow) {
         OffsetDateTime startDateTime = OffsetDateTime.now(fixedClock).plus(timeOffsetFromNow);
         Duration duration = Duration.ofMinutes(30);
-
+        var e = fixedClock.instant();
         VisitRequestDto request = prepareVisitRequestDto(startDateTime, duration);
 
         var pet = new Pet();
@@ -180,7 +181,7 @@ class VisitServiceTest {
         var treatmentRoom = new TreatmentRoom();
 
         when(vetRepository.findById(anyLong())).thenReturn(Optional.of(vet));
-        when(clock.instant()).thenReturn(fixedClock.instant());
+        when(clock.instant()).thenReturn(Instant.ofEpochMilli(1694105000));
         when(clock.getZone()).thenReturn(fixedClock.getZone());
         when(visitRepository.findAllOverlapping(anyLong(), any(OffsetDateTime.class), any(OffsetDateTime.class)))
                 .thenReturn(emptyList());
