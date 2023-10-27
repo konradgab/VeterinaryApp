@@ -9,6 +9,7 @@ import pl.gr.veterinaryapp.exception.IncorrectDataException;
 import pl.gr.veterinaryapp.exception.ResourceNotFoundException;
 import pl.gr.veterinaryapp.mapper.VetMapper;
 import pl.gr.veterinaryapp.model.dto.VetRequestDto;
+import pl.gr.veterinaryapp.model.dto.VetResponseDto;
 import pl.gr.veterinaryapp.model.entity.Vet;
 import pl.gr.veterinaryapp.repository.VetRepository;
 import pl.gr.veterinaryapp.service.impl.VetServiceImpl;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
+import static org.assertj.core.api.InstanceOfAssertFactories.map;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -40,17 +42,18 @@ public class VetServiceTest {
     @Test
     void getVetById_WithCorrectId_Returned() {
         Vet vet = new Vet();
+        VetResponseDto vetResponseDto=new VetResponseDto();
 
         when(vetRepository.findById(anyLong())).thenReturn(Optional.of(vet));
+        when(mapper.toDto(vet)).thenReturn(vetResponseDto);
 
         var result = vetService.getVetById(VET_ID);
 
         assertThat(result)
                 .isNotNull()
-                .isEqualTo(vet);
+                .isEqualTo(vetResponseDto);
 
         verify(vetRepository).findById(eq(VET_ID));
-        verifyNoInteractions(mapper);
     }
 
     @Test
@@ -91,15 +94,19 @@ public class VetServiceTest {
         Vet vet = new Vet();
         vet.setName("test");
         vet.setSurname("test");
+        VetResponseDto vetResponseDto=new VetResponseDto();
+        vetResponseDto.setName("test");
+        vetResponseDto.setSurname("test");
 
         when(mapper.map(any(VetRequestDto.class))).thenReturn(vet);
         when(vetRepository.save(any(Vet.class))).thenReturn(vet);
+        when(mapper.toDto(vet)).thenReturn(vetResponseDto);
 
         var result = vetService.createVet(request);
 
         assertThat(result)
                 .isNotNull()
-                .isEqualTo(vet);
+                .isEqualTo(vetResponseDto);
 
         verify(vetRepository).save(eq(vet));
         verify(mapper).map(request);
