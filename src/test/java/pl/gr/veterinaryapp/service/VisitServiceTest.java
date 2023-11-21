@@ -362,14 +362,15 @@ class VisitServiceTest {
 
     private VisitRequestDto prepareVisitRequestDto
             (OffsetDateTime startDateTime, Duration duration) {
-        VisitRequestDto request = new VisitRequestDto();
-        request.setPetId(PET_ID);
-        request.setStartDateTime(startDateTime);
-        request.setDuration(duration);
-        request.setOperationType(OperationType.OPERATION);
-        request.setVisitType(VisitType.REMOTE);
-        request.setPrice(BigDecimal.ONE);
-        request.setVetId(VET_ID);
+        VisitRequestDto request = VisitRequestDto.builder()
+                .petId(PET_ID)
+                .startDateTime(startDateTime)
+                .duration(duration)
+                .operationType(OperationType.OPERATION)
+                .visitType(VisitType.REMOTE)
+                .price(BigDecimal.ONE)
+                .vetId(VET_ID)
+                .build();
         return request;
     }
 
@@ -408,10 +409,7 @@ class VisitServiceTest {
         Visit visit = new Visit();
         visit.setVisitStatus(currentStatus);
         visit.setVisitDescription("other desc");
-        var visitEditDto = new VisitEditDto();
-        visitEditDto.setId(VISIT_ID);
-        visitEditDto.setVisitStatus(changedStatus);
-        visitEditDto.setDescription(VISIT_DESCRIPTION);
+        var visitEditDto = new VisitEditDto(VISIT_ID, VISIT_DESCRIPTION, changedStatus);
 
         when(visitRepository.findById(anyLong())).thenReturn(Optional.of(visit));
 
@@ -428,8 +426,7 @@ class VisitServiceTest {
 
     @Test
     void finalizeVisit_WithWrongId_ExceptionThrown() {
-        var visitEditDto = new VisitEditDto();
-        visitEditDto.setId(VISIT_ID);
+        var visitEditDto = new VisitEditDto(VISIT_ID, VISIT_DESCRIPTION, null);
 
         when(visitRepository.findById(anyLong())).thenReturn(Optional.empty());
 
