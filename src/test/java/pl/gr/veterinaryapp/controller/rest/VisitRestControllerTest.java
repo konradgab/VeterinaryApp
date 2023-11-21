@@ -215,9 +215,9 @@ class VisitRestControllerTest {
 
         var visitResponse = VisitResponseDto.builder()
                 .id(ID)
-                .vetId(1)
-                .petId(1)
-                .treatmentRoomId(1)
+                .vetId(1L)
+                .petId(1L)
+                .treatmentRoomId(1L)
                 .startDateTime(OffsetDateTime.of(LocalDateTime.of(2020, 11, 3, 5, 30), ZoneOffset.UTC))
                 .duration(Duration.ofMinutes(30))
                 .price(BigDecimal.valueOf(100))

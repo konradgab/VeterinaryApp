@@ -46,9 +46,11 @@ public class TokenServiceImpl implements TokenService {
     public AuthToken register(@RequestBody LoginUser loginUser) {
         var user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid username or password."));
+
         if (!bcryptEncoder.matches(loginUser.getPassword(), user.getPassword())) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
+
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginUser.getUsername(),
@@ -56,6 +58,7 @@ public class TokenServiceImpl implements TokenService {
                         getAuthority(user)
                 )
         );
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenUtil.generateToken(authentication);
         return new AuthToken(token);

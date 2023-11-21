@@ -86,7 +86,9 @@ class VisitServiceTest {
 
     @BeforeAll
     static void setupTest() {
-        fixedClock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
+        fixedClock = Clock.fixed(
+                Instant.ofEpochSecond(1700576105),
+                ZoneOffset.UTC);
     }
 
     @Test

@@ -102,7 +102,7 @@ class PetServiceTest {
                 catchThrowableOfType(() -> petService.getPetById(USER, PET_ID), ResourceNotFoundException.class);
 
         assertThat(thrown)
-                .hasMessage("Wrong id.");
+                .hasMessage("Pet with given id not found.");
 
         verify(petRepository).findById(eq(PET_ID));
         verifyNoInteractions(clientRepository, animalRepository);
