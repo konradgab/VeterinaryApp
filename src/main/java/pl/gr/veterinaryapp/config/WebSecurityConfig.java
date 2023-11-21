@@ -25,9 +25,7 @@ import pl.gr.veterinaryapp.security.encoder.BCryptPepperPasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
-
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
@@ -51,19 +49,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/visits/**", "/api/pets/**").authenticated()
-//                .antMatchers(HttpMethod.POST, "/api/visits/**", "/api/pets/**", "/log-out")
-//                .authenticated()
-//                .antMatchers(HttpMethod.POST, "/api/users/**", "/api/clients/**", "/api/vet/**")
-//                .hasRole("ADMIN")
-//                .antMatchers(HttpMethod.DELETE, "/api/users/**", "/api/clients/**", "/api/vet/**")
-//                .hasRole("ADMIN")
-//                .antMatchers(HttpMethod.PATCH, "/api/users/**", "/api/clients/**", "/api/vet/**")
-//                .hasRole("ADMIN")
-//                .antMatchers(HttpMethod.PUT, "/api/users/**", "/api/clients/**", "/api/vet/**")
-//                .hasRole("ADMIN")
-//                .anyRequest().hasAnyRole("ADMIN", "VET")
-                .anyRequest().permitAll()
+                .antMatchers(HttpMethod.GET, "/api/visits/**", "/api/pets/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/visits/**", "/api/pets/**", "/log-out")
+                .authenticated()
+                .antMatchers(HttpMethod.POST, "/api/users/**", "/api/clients/**", "/api/vet/**")
+                .hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/users/**", "/api/clients/**", "/api/vet/**")
+                .hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/api/users/**", "/api/clients/**", "/api/vet/**")
+                .hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/users/**", "/api/clients/**", "/api/vet/**")
+                .hasRole("ADMIN")
+                .anyRequest().hasAnyRole("ADMIN", "VET")
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
