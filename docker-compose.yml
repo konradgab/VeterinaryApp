@@ -1,4 +1,8 @@
 version: '3'
+
+volumes:
+  postgers:
+
 services:
   app:
     build:
@@ -17,6 +21,8 @@ services:
     image: postgres:latest
     ports:
       - "5432:5432"
+    volumes:
+      - postgers:/var/lib/postgres
     environment:
       POSTGRES_DB: mydb
       POSTGRES_USER: postgres
