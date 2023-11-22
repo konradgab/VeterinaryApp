@@ -43,7 +43,7 @@ public class TokenServiceImpl implements TokenService {
     private final TokenProvider jwtTokenUtil;
     private final Clock systemClock;
 
-    public AuthToken register(@RequestBody LoginUser loginUser) {
+    public AuthToken login(@RequestBody LoginUser loginUser) {
         var user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid username or password."));
 
