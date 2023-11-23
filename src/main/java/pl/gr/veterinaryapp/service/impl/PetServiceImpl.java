@@ -84,7 +84,7 @@ public class PetServiceImpl implements PetService {
         petRepository.delete(result);
     }
 
-    private boolean isUserAuthorized(User user, Client client) { //todo
+    private boolean isUserAuthorized(User user, Client client) {
         boolean isClient = user.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)

@@ -13,7 +13,6 @@ import java.time.OffsetDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder(builderClassName = "VisitResponseDtoBuilder")
-//@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 public class VisitResponseDto extends RepresentationModel<VisitResponseDto> {
 
@@ -28,15 +27,4 @@ public class VisitResponseDto extends RepresentationModel<VisitResponseDto> {
     private final String visitDescription;
     private final VisitStatus visitStatus;
     private final OperationType operationType;
-
-//    public static class VisitResponseDtoBuilder {
-//
-//        private Long id = 1L;
-//        private Long vetId = 1L;
-//        private Long petId = 1L;
-//        private Long treatmentRoomId = 1L;
-//        private OffsetDateTime startDateTime = OffsetDateTime.MIN;
-//        private Duration duration = Duration.ZERO;
-//        private BigDecimal price = BigDecimal.ZERO;
-//    }
 }

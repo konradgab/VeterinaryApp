@@ -10,7 +10,6 @@ import java.time.OffsetDateTime;
 
 @Data
 @Builder(builderClassName = "VisitRequestDtoBuilder")
-//@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 public class VisitRequestDto {
 
@@ -21,13 +20,4 @@ public class VisitRequestDto {
     private final BigDecimal price;
     private final VisitType visitType;
     private final OperationType operationType;
-
-//    public static class VisitRequestDtoBuilder {
-//
-//        private Long vetId = 1L;
-//        private Long petId = 1L;
-//        private OffsetDateTime startDateTime = OffsetDateTime.MIN;
-//        private Duration duration = Duration.ZERO;
-//        private BigDecimal price = BigDecimal.ZERO;
-//    }
 }
