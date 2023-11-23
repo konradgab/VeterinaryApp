@@ -1,7 +1,7 @@
 version: '3'
 
 volumes:
-  postgers:
+  postgres:
 
 services:
   app:
@@ -22,7 +22,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgers:/var/lib/postgres
+      - postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: mydb
       POSTGRES_USER: postgres
