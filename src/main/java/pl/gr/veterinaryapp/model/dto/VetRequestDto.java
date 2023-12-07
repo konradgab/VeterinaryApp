@@ -2,6 +2,7 @@ package pl.gr.veterinaryapp.model.dto;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.time.OffsetTime;
 
 @Data
@@ -10,7 +11,7 @@ public class VetRequestDto {
     private String name;
     private String surname;
     private String photoUrl;
-    private OffsetTime workStartTime;
+    private LocalDateTime workStartTime;
     private OffsetTime workEndTime;
 
     public void setWorkStartTime(OffsetTime workStartTime) {
