@@ -1,6 +1,8 @@
 package pl.gr.veterinaryapp.model.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +15,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "pets")
 public class Pet {
