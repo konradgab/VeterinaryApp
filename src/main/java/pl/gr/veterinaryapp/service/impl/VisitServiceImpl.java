@@ -1,6 +1,7 @@
 package pl.gr.veterinaryapp.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class VisitServiceImpl implements VisitService {
@@ -235,6 +237,7 @@ public class VisitServiceImpl implements VisitService {
                         OffsetDateTime.now(systemClock), VisitStatus.SCHEDULED);
         for (var visit : visits) {
             visit.setVisitStatus(VisitStatus.EXPIRED);
+            log.info("Set status {} to visit with ID {}.", VisitStatus.EXPIRED, visit.getId());
         }
     }
 

@@ -1,6 +1,7 @@
 package pl.gr.veterinaryapp.controller.rest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import pl.gr.veterinaryapp.service.UserService;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("api/users")
 @RestController
@@ -29,12 +31,15 @@ public class UserController {
 
     @PostMapping
     public UserDto createUser(@RequestBody UserDto user) {
-        return mapper.map(userService.createUser(user));
+        UserDto userDto = mapper.map(userService.createUser(user));
+        log.info("Created new user with role {}.", userDto.getRole());
+        return userDto;
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable long id) {
         userService.deleteUser(id);
+        log.info("Deleted user with id {}.", id);
     }
 
     @GetMapping("/{id}")

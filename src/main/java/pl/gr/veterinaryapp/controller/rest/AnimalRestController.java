@@ -1,6 +1,7 @@
 package pl.gr.veterinaryapp.controller.rest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import pl.gr.veterinaryapp.service.AnimalService;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/animals")
@@ -28,12 +30,15 @@ public class AnimalRestController {
 
     @PostMapping
     public Animal createAnimal(@RequestBody AnimalRequestDto animalRequestDTO) {
-        return animalService.createAnimal(animalRequestDTO);
+        Animal animal = animalService.createAnimal(animalRequestDTO);
+        log.info("Created animal with ID {}.", animal.getId());
+        return animal;
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id) {
         animalService.deleteAnimal(id);
+        log.info("Deleted animal with ID {}", id);
     }
 
     @GetMapping

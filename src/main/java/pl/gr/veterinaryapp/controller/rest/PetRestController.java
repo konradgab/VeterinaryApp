@@ -1,6 +1,7 @@
 package pl.gr.veterinaryapp.controller.rest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,6 +23,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("api/pets")
 @RestController
@@ -33,6 +35,7 @@ public class PetRestController {
     @DeleteMapping(path = "/{id}")
     public void delete(@PathVariable int id) {
         petService.deletePet(id);
+        log.info("Deleted pet with ID {}.", id);
     }
 
     @GetMapping(path = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
@@ -58,10 +61,9 @@ public class PetRestController {
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public PetResponseDto createPet(@AuthenticationPrincipal User user, @RequestBody PetRequestDto petRequestDto) {
-        System.out.println(user);
-
         var pet = mapper.map(petService.createPet(user, petRequestDto));
         addLinks(pet);
+        log.info("Created pet with ID {}.", pet.getId());
         return pet;
     }
 

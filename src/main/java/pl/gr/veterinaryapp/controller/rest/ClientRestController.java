@@ -1,6 +1,7 @@
 package pl.gr.veterinaryapp.controller.rest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import pl.gr.veterinaryapp.service.ClientService;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/clients")
@@ -30,12 +32,15 @@ public class ClientRestController {
 
     @PostMapping
     public ClientResponseDto createClient(@RequestBody ClientRequestDto clientRequestDTO) {
-        return mapper.map(clientService.createClient(clientRequestDTO));
+        ClientResponseDto clientResponseDto = mapper.map(clientService.createClient(clientRequestDTO));
+        log.info("Created client with ID {}.", clientResponseDto.getId());
+        return clientResponseDto;
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id) {
         clientService.deleteClient(id);
+        log.info("Deleted client with ID {}.", id);
     }
 
     @GetMapping

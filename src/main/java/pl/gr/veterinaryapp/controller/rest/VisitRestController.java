@@ -1,6 +1,7 @@
 package pl.gr.veterinaryapp.controller.rest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("api/visits")
 @RestController
@@ -43,6 +45,7 @@ public class VisitRestController {
     @DeleteMapping(path = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public void delete(@PathVariable long id) {
         visitService.deleteVisit(id);
+        log.info("Deleted visit with ID {}.", id);
     }
 
     @GetMapping(path = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
@@ -97,6 +100,7 @@ public class VisitRestController {
                                         @RequestBody VisitRequestDto visitRequestDto) {
         var visit = mapper.map(visitService.createVisit(user, visitRequestDto));
         addLinks(visit);
+        log.info("Created visit with ID {}.", visit);
         return visit;
     }
 
@@ -104,6 +108,7 @@ public class VisitRestController {
     public VisitResponseDto finalizeVisit(@RequestBody VisitEditDto visitEditDto) {
         var visit = mapper.map(visitService.finalizeVisit(visitEditDto));
         addLinks(visit);
+        log.info("Finalized visit with ID {}.", visitEditDto.getId());
         return visit;
     }
 
