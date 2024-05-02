@@ -60,13 +60,13 @@ class ClientRestControllerTest {
     @Test
     @WithMockUser
     void createClient_CorrectData_Created() throws Exception {
-        var clientRequest = new ClientRequestDto();
+        ClientRequestDto clientRequest = new ClientRequestDto();
         clientRequest.setName(CLIENT_NAME);
         clientRequest.setSurname(CLIENT_SURNAME);
 
-        var client = new Client();
+        Client client = new Client();
 
-        var clientResponse = new ClientResponseDto();
+        ClientResponseDto clientResponse = new ClientResponseDto();
         clientResponse.setName(CLIENT_NAME);
         clientResponse.setSurname(CLIENT_SURNAME);
 
@@ -88,9 +88,9 @@ class ClientRestControllerTest {
     @Test
     @WithMockUser
     void getClient_CorrectData_Returned() throws Exception {
-        var client = new Client();
+        Client client = new Client();
 
-        var clientResponse = new ClientResponseDto();
+        ClientResponseDto clientResponse = new ClientResponseDto();
         clientResponse.setName(CLIENT_NAME);
         clientResponse.setSurname(CLIENT_SURNAME);
 
@@ -110,9 +110,9 @@ class ClientRestControllerTest {
     @Test
     @WithMockUser
     void getAllClients_CorrectData_Returned() throws Exception {
-        var clients = List.of(new Client(), new Client());
+        List<Client> clients = List.of(new Client(), new Client());
 
-        var clientResponse = new ClientResponseDto();
+        ClientResponseDto clientResponse = new ClientResponseDto();
         clientResponse.setName(CLIENT_NAME);
         clientResponse.setSurname(CLIENT_SURNAME);
 
