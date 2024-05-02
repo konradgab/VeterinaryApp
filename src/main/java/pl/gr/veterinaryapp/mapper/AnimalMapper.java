@@ -2,6 +2,7 @@ package pl.gr.veterinaryapp.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+import pl.gr.veterinaryapp.model.dto.AnimalDto;
 import pl.gr.veterinaryapp.model.dto.AnimalRequestDto;
 import pl.gr.veterinaryapp.model.entity.Animal;
 
@@ -9,4 +10,6 @@ import pl.gr.veterinaryapp.model.entity.Animal;
 public interface AnimalMapper {
 
     Animal map(AnimalRequestDto animalRequestDto);
+
+    AnimalDto toDto(Animal animal);
 }

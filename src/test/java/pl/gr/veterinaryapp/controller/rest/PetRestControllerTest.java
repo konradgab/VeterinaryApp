@@ -77,10 +77,10 @@ class PetRestControllerTest {
         Client client = new Client();
         client.setId(ID);
 
-        var petRequest = preparePetRequest(PET_NAME, LocalDate.of(1999, 10, 2), ID, ID);
-        var pet = preparePet(PET_NAME, LocalDate.of(1999, 10, 2), animal, client);
+        PetRequestDto petRequest = preparePetRequest(PET_NAME, LocalDate.of(1999, 10, 2), ID, ID);
+        Pet pet = preparePet(PET_NAME, LocalDate.of(1999, 10, 2), animal, client);
 
-        var petResponse = preparePetResponse(pet);
+        PetResponseDto petResponse = preparePetResponse(pet);
 
         when(petService.createPet(any(User.class), any(PetRequestDto.class))).thenReturn(pet);
         when(petMapper.map(any(Pet.class))).thenReturn(petResponse);
@@ -104,9 +104,9 @@ class PetRestControllerTest {
         Client client = new Client();
         client.setId(ID);
 
-        var pet = preparePet(PET_NAME, LocalDate.of(1999, 10, 2), animal, client);
+        Pet pet = preparePet(PET_NAME, LocalDate.of(1999, 10, 2), animal, client);
 
-        var petResponse = preparePetResponse(pet);
+        PetResponseDto petResponse = preparePetResponse(pet);
 
         when(petService.getPetById(any(User.class), anyLong())).thenReturn(pet);
         when(petMapper.map(any(Pet.class))).thenReturn(petResponse);
@@ -143,7 +143,7 @@ class PetRestControllerTest {
         List<PetResponseDto> petResponses = new ArrayList<>();
         List<Pet> pets = Collections.emptyList();
 
-        var petResponse = preparePetResponse(
+        PetResponseDto petResponse = preparePetResponse(
                 preparePet(PET_NAME, LocalDate.of(1999, 10, 2), animal, client));
 
         for (int i = 0; i < 2; i++) {
@@ -194,7 +194,7 @@ class PetRestControllerTest {
     }
 
     private Pet preparePet(String name, LocalDate birthDate, Animal animal, Client client) {
-        var pet = new Pet();
+        Pet pet = new Pet();
         pet.setName(name);
         pet.setBirthDate(birthDate);
         pet.setAnimal(animal);
@@ -203,7 +203,7 @@ class PetRestControllerTest {
     }
 
     private PetResponseDto preparePetResponse(Pet pet) {
-        var petResponse = new PetResponseDto();
+        PetResponseDto petResponse = new PetResponseDto();
         petResponse.setName(pet.getName());
         petResponse.setId(ID);
         petResponse.setAnimalId(ID);
@@ -213,7 +213,7 @@ class PetRestControllerTest {
     }
 
     private PetRequestDto preparePetRequest(String name, LocalDate birthDate, Long animalId, Long clientId) {
-        var petRequest = new PetRequestDto();
+        PetRequestDto petRequest = new PetRequestDto();
         petRequest.setName(name);
         petRequest.setBirthDate(birthDate);
         petRequest.setAnimalId(animalId);

@@ -47,7 +47,7 @@ public class VisitRestController {
 
     @GetMapping(path = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public VisitResponseDto getVisit(@AuthenticationPrincipal User user, @PathVariable long id) {
-        var visit = mapper.map(visitService.getVisitById(user, id));
+        VisitResponseDto visit = mapper.map(visitService.getVisitById(user, id));
         addLinks(visit);
         return visit;
     }
@@ -57,37 +57,33 @@ public class VisitRestController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX") OffsetDateTime startDateTime,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX") OffsetDateTime endDateTime,
             @RequestParam(required = false) List<Long> vetIds) {
-        Set<Long> vetIdsSet;
-        if (vetIds == null) {
-            vetIdsSet = Collections.emptySet();
-        } else {
-            vetIdsSet = vetIds
-                    .stream()
+        Set<Long> vetIdsSet = (vetIds == null)
+                ? Collections.emptySet()
+                : vetIds.stream()
                     .filter(Objects::nonNull)
                     .collect(Collectors.toSet());
-        }
 
-        var availableVisits = visitService
+        List<AvailableVisitDto> availableVisits = visitService
                 .getAvailableVisits(startDateTime, endDateTime, vetIdsSet);
 
-        for (var availableVisit : availableVisits) {
-            for (var vetId : availableVisit.getVetIds()) {
-                availableVisit.add(createVetLink(vetId));
-            }
-        }
+        availableVisits.forEach(availableVisit ->
+                availableVisit.getVetIds().forEach(vetId ->
+                                                    availableVisit.add(createVetLink(vetId))
+                                                     )
+        );
+
         return availableVisits;
     }
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public List<VisitResponseDto> getAllVisits(@AuthenticationPrincipal User user) {
-        var visits = mapper.mapAsList(visitService.getAllVisits(user));
+        List<VisitResponseDto> visits = mapper.mapAsList(visitService.getAllVisits(user));
 
-        for (var visit : visits) {
+        visits.forEach(visit -> {
             addLinks(visit);
-            var link = linkTo(methodOn(VisitRestController.class).getVisit(user, visit.getId()))
-                    .withSelfRel();
+            Link link = linkTo(methodOn(VisitRestController.class).getVisit(user, visit.getId())).withSelfRel();
             visit.add(link);
-        }
+        });
 
         return visits;
     }
@@ -95,14 +91,14 @@ public class VisitRestController {
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public VisitResponseDto createVisit(@AuthenticationPrincipal User user,
                                         @RequestBody VisitRequestDto visitRequestDto) {
-        var visit = mapper.map(visitService.createVisit(user, visitRequestDto));
+        VisitResponseDto visit = mapper.map(visitService.createVisit(user, visitRequestDto));
         addLinks(visit);
         return visit;
     }
 
     @PatchMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public VisitResponseDto finalizeVisit(@RequestBody VisitEditDto visitEditDto) {
-        var visit = mapper.map(visitService.finalizeVisit(visitEditDto));
+        VisitResponseDto visit = mapper.map(visitService.finalizeVisit(visitEditDto));
         addLinks(visit);
         return visit;
     }

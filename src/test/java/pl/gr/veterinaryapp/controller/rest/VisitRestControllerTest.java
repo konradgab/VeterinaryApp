@@ -130,7 +130,7 @@ class VisitRestControllerTest {
                                         OffsetDateTime startDateTime, Duration duration,
                                         BigDecimal price, VisitType visitType, OperationType operationType,
                                         VisitStatus visitStatus) throws Exception {
-        var visitRequest = VisitRequestDto.builder()
+        VisitRequestDto visitRequest = VisitRequestDto.builder()
                 .visitType(visitType)
                 .operationType(operationType)
                 .duration(duration)
@@ -140,7 +140,7 @@ class VisitRestControllerTest {
                 .startDateTime(startDateTime)
                 .build();
 
-        var visitResponse = VisitResponseDto.builder()
+        VisitResponseDto visitResponse = VisitResponseDto.builder()
                 .id(id)
                 .vetId(vetId)
                 .petId(petId)
@@ -153,7 +153,7 @@ class VisitRestControllerTest {
                 .visitStatus(visitStatus)
                 .build();
 
-        var visit = new Visit();
+        Visit visit = new Visit();
 
         when(visitService.createVisit(any(User.class), any(VisitRequestDto.class))).thenReturn(visit);
         when(visitMapper.map(any(Visit.class))).thenReturn(visitResponse);
@@ -177,7 +177,7 @@ class VisitRestControllerTest {
                                            BigDecimal price, VisitType visitType, OperationType operationType,
                                            VisitStatus visitStatus) throws Exception {
 
-        var visitResponse = VisitResponseDto.builder()
+        VisitResponseDto visitResponse = VisitResponseDto.builder()
                 .id(id)
                 .vetId(vetId)
                 .petId(petId)
@@ -209,11 +209,11 @@ class VisitRestControllerTest {
     @Test
     @WithMockUser
     void finalizeVisit_CorrectData_Returned() throws Exception {
-        var visitEditDto = new VisitEditDto();
+        VisitEditDto visitEditDto = new VisitEditDto();
 
-        var visit = new Visit();
+        Visit visit = new Visit();
 
-        var visitResponse = VisitResponseDto.builder()
+        VisitResponseDto visitResponse = VisitResponseDto.builder()
                 .id(ID)
                 .vetId(1)
                 .petId(1)
@@ -243,7 +243,7 @@ class VisitRestControllerTest {
     @Test
     @WithMockUser
     void getAvailableVisits_NonEmptyVetIds_Returned() throws Exception {
-        var availableVisitDto = new AvailableVisitDto();
+        AvailableVisitDto availableVisitDto = new AvailableVisitDto();
         availableVisitDto.setVetIds(List.of(1L));
         OffsetDateTime offsetDateTime = OffsetDateTime.of(LocalDateTime.of(2020, 11, 3, 5, 30), ZoneOffset.UTC);
         availableVisitDto.setStartDateTime(offsetDateTime);
@@ -269,7 +269,7 @@ class VisitRestControllerTest {
     @Test
     @WithMockUser
     void getAvailableVisits_EmptyVetIds_Returned() throws Exception {
-        var availableVisitDto = new AvailableVisitDto();
+        AvailableVisitDto availableVisitDto = new AvailableVisitDto();
         availableVisitDto.setVetIds(List.of(1L));
         OffsetDateTime offsetDateTime = OffsetDateTime.of(LocalDateTime.of(2020, 11, 3, 5, 30), ZoneOffset.UTC);
         availableVisitDto.setStartDateTime(offsetDateTime);

@@ -37,30 +37,25 @@ public class PetRestController {
 
     @GetMapping(path = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public PetResponseDto getPet(@AuthenticationPrincipal User user, @PathVariable long id) {
-        var pet = mapper.map(petService.getPetById(user, id));
+        PetResponseDto pet = mapper.map(petService.getPetById(user, id));
         addLinks(pet);
         return pet;
     }
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public List<PetResponseDto> getAllPets(@AuthenticationPrincipal User user) {
-        var pets = mapper.mapAsList(petService.getAllPets(user));
-
-        for (var pet : pets) {
+        List<PetResponseDto> pets = mapper.mapAsList(petService.getAllPets(user));
+        pets.forEach(pet -> {
             addLinks(pet);
-            var link = linkTo(methodOn(PetRestController.class).getPet(user, pet.getId()))
-                    .withSelfRel();
+            Link link = linkTo(methodOn(PetRestController.class).getPet(user, pet.getId())).withSelfRel();
             pet.add(link);
-        }
-
+        });
         return pets;
     }
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public PetResponseDto createPet(@AuthenticationPrincipal User user, @RequestBody PetRequestDto petRequestDto) {
-        System.out.println(user);
-
-        var pet = mapper.map(petService.createPet(user, petRequestDto));
+        PetResponseDto pet = mapper.map(petService.createPet(user, petRequestDto));
         addLinks(pet);
         return pet;
     }
